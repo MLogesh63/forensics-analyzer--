@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensics Analyzer - Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 40px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav h1 { font-size: 24px; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; }
+        nav a:hover { text-decoration: underline; }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h2 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .scan-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .scan-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: monospace;
+        }
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .history-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .history-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background: #f9f9f9;
+            font-weight: 600;
+        }
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        .risk-low { color: green; font-weight: 600; }
+        .risk-medium { color: orange; font-weight: 600; }
+        .risk-high { color: red; font-weight: 600; }
+        .home-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s infinite;
+            font-size: 28px;
+            text-decoration: none;
+            color: white;
+        }
+        .home-button:hover {
+            transform: scale(1.1);
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 5px 30px rgba(102, 126, 234, 0.8); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>Forensics Analyzer</h1>
+        <div>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h2>Email & Browser Forensics Scanner</h2>
+            <p>Analyze email headers and browser logs for security threats</p>
+        </div>
+
+        <div class="scan-section">
+            <h3>📧 Email Header Analysis</h3>
+            <form method="POST" action="{{ url_for('scan_email') }}">
+                <div class="form-group">
+                    <label>Paste Email Headers:</label>
+                    <textarea name="email_headers" rows="10" placeholder="Paste raw email headers here..." required></textarea>
+                </div>
+                <button type="submit">Analyze Email</button>
+            </form>
+        </div>
+
+        <div class="scan-section">
+            <h3>🌐 Browser Log Analysis</h3>
+            <form method="POST" action="{{ url_for('scan_browser') }}">
+                <div class="form-group">
+                    <label>Paste Browser Log:</label>
+                    <textarea name="browser_log" rows="10" placeholder="Paste browser activity log here..." required></textarea>
+                </div>
+                <button type="submit">Analyze Browser Log</button>
+            </form>
+        </div>
+
+        <div class="history-section">
+            <h3>📋 Scan History</h3>
+            {% if scans %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Risk Score</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for scan in scans %}
+                        <tr>
+                            <td>{{ scan.timestamp }}</td>
+                            <td>{{ scan.scan_type }}</td>
+                            <td>
+                                {% if scan.risk_score <= 3 %}
+                                    <span class="risk-low">{{ scan.risk_score }}/10</span>
+                                {% elif scan.risk_score <= 6 %}
+                                    <span class="risk-medium">{{ scan.risk_score }}/10</span>
+                                {% else %}
+                                    <span class="risk-high">{{ scan.risk_score }}/10</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ scan.status }}</td>
+                            <td>
+                                <a href="{{ url_for('view_report', scan_id=scan.id) }}">View Report</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No scans yet. Start by analyzing an email header or browser log.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{{ url_for('index') }}" class="home-button" title="Home">🔍</a>
+</body>
+</html>

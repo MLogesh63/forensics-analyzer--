@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensics Analyzer - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+        }
+
+        .left-section {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Solid Blue Circle Search Icon */
+        .search-icon {
+            width: 110px;
+            height: 110px;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #3a5fcd 0%, #2d4a9f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .search-icon::before {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: rgba(100, 200, 255, 0.2);
+            border-radius: 50%;
+            animation: none;
+        }
+
+        .search-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #5fd3d3;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            animation: none;
+        }
+
+        .search-icon svg {
+            width: 55px;
+            height: 55px;
+            stroke: rgba(255, 255, 255, 0.95);
+            stroke-width: 2;
+            fill: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .team-section {
+            margin-bottom: 40px;
+            margin-top: 0;
+        }
+
+        .team-section h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .team-section ul {
+            list-style: none;
+        }
+
+        .team-section li {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 0.5px;
+        }
+
+        .team-section li span {
+            color: #ffd700;
+            margin-right: 15px;
+        }
+
+        .logo-section {
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            padding-top: 30px;
+        }
+
+        .logo-section img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .university-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffd700;
+        }
+
+        .university-info p {
+            font-size: 11px;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
+        }
+
+        .right-section {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-top {
+            width: 80px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        .threat-hunter-branding {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .threat-hunter-icons {
+            font-size: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            animation: pulse-threat 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-threat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .threat-hunter-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00d4ff;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        h3 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffe0e0;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .left-section {
+                padding: 40px 20px;
+            }
+
+            .right-section {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Section with Team AEGIS -->
+        <div class="left-section">
+            <!-- Team Section -->
+            <div class="team-section">
+                <div class="threat-hunter-branding">
+                    <div class="threat-hunter-icons">⚔️ 🔍</div>
+                    <div class="threat-hunter-label">THREAT HUNTER</div>
+                </div>
+                <h2>Team AEGIS</h2>
+                <ul>
+                    <li><span>▸</span>M.Logesh</li>
+                    <li><span>▸</span>Madhan Kumar</li>
+                    <li><span>▸</span>Sathish</li>
+                    <li><span>▸</span>Arun Madhesh</li>
+                    <li><span>▸</span>Nivetha shri</li>
+                    <li><span>▸</span>nithya lakshmi</li>
+                </ul>
+            </div>
+
+            <!-- Logo and University Info -->
+            <div class="logo-section">
+                <img src="{{ url_for('static', filename='kalasalingam_logo.png') }}" alt="KARE Logo">
+                <div class="university-info">
+                    <h3>KALASALINGAM</h3>
+                    <p>ACADEMY OF RESEARCH AND EDUCATION</p>
+                    <p>(DEEMED TO BE UNIVERSITY)</p>
+                    <p>Under sec. 3 of UGC Act 1956, Accredited by NAAC with "A++" Grade</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section with Login Form -->
+        <div class="right-section">
+            <img src="{{ url_for('static', filename='kalasalingam_logo.png') }}" alt="KARE Logo" class="logo-top">
+
+            <h1>Forensics Analyzer</h1>
+            <h3>Email & Browser Security Analysis</h3>
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>USERNAME</label>
+                    <input type="text" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label>PASSWORD</label>
+                    <input type="password" name="password" required>
+                </div>
+
+                <button type="submit">LOGIN</button>
+            </form>
+
+            <div class="links">
+                <a href="{{ url_for('signup') }}">Create Account</a>
+                <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

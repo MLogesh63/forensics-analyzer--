@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forensics Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        
+        .actions { text-align: center; margin-bottom: 20px; }
+        .btn { display: inline-block; padding: 12px 25px; margin: 0 10px; background: white; color: #667eea; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; text-decoration: none; }
+        .btn:hover { background: #f0f0f0; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #764ba2; }
+        
+        .card { background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card h2 { color: #667eea; margin-bottom: 15px; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        .report-section { margin-bottom: 20px; }
+        .report-section h3 { color: #333; margin-bottom: 10px; font-size: 16px; }
+        .report-section p { color: #666; line-height: 1.6; }
+        
+        .risk-score { font-size: 48px; font-weight: bold; text-align: center; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .risk-high { background: #ffebee; color: #c62828; }
+        .risk-medium { background: #fff3e0; color: #e65100; }
+        .risk-low { background: #e8f5e9; color: #2e7d32; }
+        
+        .findings-list { background: #f5f5f5; padding: 15px; border-radius: 4px; margin: 10px 0; }
+        .findings-list li { margin-left: 20px; margin-bottom: 8px; color: #333; }
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 1000;
+            font-size: 28px;
+        }
+        
+        .home-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.8);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .home-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .home-btn::before {
+            content: '🔍';
+            animation: pulse 2.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="home-btn" title="Back to Home"></a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📋 Forensics Analysis Report</h1>
+        </div>
+        
+        <div class="actions">
+            <a href="/dashboard" class="btn">Back to Dashboard</a>
+            <a href="/report/{{ scan.id }}/download" class="btn btn-primary">📥 Download PDF</a>
+        </div>
+
+        <div class="card">
+            <h2>Risk Assessment</h2>
+            <div class="risk-score {% if scan.risk_score >= 7 %}risk-high{% elif scan.risk_score >= 4 %}risk-medium{% else %}risk-low{% endif %}">
+                {{ scan.risk_score }} / 10
+            </div>
+            <p style="text-align: center; color: #666;">
+                {% if scan.risk_score >= 7 %}
+                    ⚠️ HIGH RISK - Immediate action recommended
+                {% elif scan.risk_score >= 4 %}
+                    ⚡ MEDIUM RISK - Review recommended
+                {% else %}
+                    ✅ LOW RISK - Appears safe
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Scan Details</h2>
+            <div class="report-section">
+                <h3>Scan Type:</h3>
+                <p><strong>{{ scan.scan_type }}</strong></p>
+            </div>
+            <div class="report-section">
+                <h3>Timestamp:</h3>
+                <p>{{ scan.timestamp }}</p>
+            </div>
+            <div class="report-section">
+                <h3>Analysis:</h3>
+                <p>{{ scan.details }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Key Findings</h2>
+            {% if scan.findings %}
+                <ul class="findings-list">
+                    {% for finding in scan.findings %}
+                        <li>{{ finding }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: #999;">No specific findings recorded.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Raw Report Data</h2>
+            <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px; overflow-x: auto;">{{ scan.json_data }}</pre>
+        </div>
+    </div>
+</body>
+</html>
